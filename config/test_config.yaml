@@ -1,0 +1,16 @@
+test:
+  name: "DK_FULL_UNLOCK_FLOW"
+  description: "Full digital key unlock flow"
+
+execution:
+  stop_on_failure: false
+  verbose: true
+
+validation:
+  enable_flow: true
+  enable_timing: true
+  enable_state_machine: true
+
+reporting:
+  save_report: true
+  output_format: ["json", "csv"]

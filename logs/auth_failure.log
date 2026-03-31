@@ -1,0 +1,10 @@
+2026-03-20 13:00:00.001 [INFO]  [BLE]        Scanner started
+2026-03-20 13:00:00.100 [INFO]  [BLE]        Digital Key device detected (ID=DK-004)
+
+2026-03-20 13:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_004)
+2026-03-20 13:00:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xFFFF)
+
+2026-03-20 13:00:00.350 [ERROR] [AUTH]       AUTH_RESPONSE invalid (reason=signature_mismatch)
+2026-03-20 13:00:00.360 [INFO]  [AUTH]       Authentication failed
+
+2026-03-20 13:00:00.500 [INFO]  [SYSTEM]     Access denied

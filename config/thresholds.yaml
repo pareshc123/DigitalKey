@@ -1,0 +1,14 @@
+timing:
+  auth_response_ms: 300           # AUTH_REQUEST --> AUTH_RESPONSE
+  detection_to_auth_ms: 200       # DEVICE_DETECTED --> AUTH_STARTED
+  proximity_to_unlock_ms: 500     # PROXIMITY_VALIDATED --> UNLOCK_REQUESTED
+  unlock_confirmation_ms: 300     # UNLOCK_REQUESTED --> UNLOCK_CONFIRMED
+
+uwb:
+  max_distance_m: 1.5             # threshold for proximity validation
+
+system:
+  session_timeout_ms: 5000        # total session duration limit
+
+security:
+  replay_window_ms: 100

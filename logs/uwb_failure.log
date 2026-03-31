@@ -1,0 +1,15 @@
+2026-03-20 12:00:00.001 [INFO]  [BLE]        Scanner started
+2026-03-20 12:00:00.090 [INFO]  [BLE]        Digital Key device detected (ID=DK-003)
+
+2026-03-20 12:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_003)
+2026-03-20 12:00:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent
+2026-03-20 12:00:00.280 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=70ms)
+2026-03-20 12:00:00.290 [INFO]  [AUTH]       Authentication successful
+
+2026-03-20 12:00:00.400 [INFO]  [UWB]        Ranging session started
+2026-03-20 12:00:00.500 [DEBUG] [UWB]        Distance measured (distance=2.5m)
+2026-03-20 12:00:00.600 [DEBUG] [UWB]        Distance measured (distance=2.2m)
+
+2026-03-20 12:00:01.000 [WARN]  [UWB]        Proximity validation failed (distance too large)
+
+2026-03-20 12:00:01.200 [INFO]  [SYSTEM]     Access denied

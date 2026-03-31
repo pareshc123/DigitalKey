@@ -1,0 +1,19 @@
+2026-03-20 10:00:00.001 [INFO]  [BLE]        Scanner started (interface=hci0)
+2026-03-20 10:00:00.100 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:01, RSSI=-60 dBm)
+2026-03-20 10:00:00.110 [INFO]  [BLE]        Digital Key device detected (ID=DK-001)
+
+2026-03-20 10:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_001)
+2026-03-20 10:00:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xA1B2C3)
+2026-03-20 10:00:00.290 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=80ms)
+2026-03-20 10:00:00.300 [INFO]  [AUTH]       Authentication successful (session_id=sess_001)
+
+2026-03-20 10:00:00.400 [INFO]  [UWB]        Ranging session started (anchor_id=UWB-1)
+2026-03-20 10:00:00.500 [DEBUG] [UWB]        Distance measured (distance=2.0m)
+2026-03-20 10:00:00.600 [DEBUG] [UWB]        Distance measured (distance=1.6m)
+2026-03-20 10:00:00.700 [DEBUG] [UWB]        Distance measured (distance=1.3m)
+2026-03-20 10:00:00.750 [INFO]  [UWB]        Proximity validated (threshold < 1.5m)
+
+2026-03-20 10:00:00.900 [INFO]  [ACCESS]     Door unlock command issued
+2026-03-20 10:00:01.000 [INFO]  [ACCESS]     Door unlock confirmed
+
+2026-03-20 10:00:02.000 [INFO]  [SYSTEM]     Session terminated successfully
