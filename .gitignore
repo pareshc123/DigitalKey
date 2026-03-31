@@ -1,6 +1,15 @@
+# Virtual env
 .venv/
+
+# IDE
 .idea/
+
+# Python cache
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Testing
 .pytest_cache/
+
+# Reports
 reports/
