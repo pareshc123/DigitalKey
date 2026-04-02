@@ -66,7 +66,7 @@ class Validator:
         return {
             "name": "no_errors",
             "status": "PASS",
-            "details": "No error logs detected",
+            "details": "No error in the traces detected",
             "metrics": {"error_count": 0}
         }
 

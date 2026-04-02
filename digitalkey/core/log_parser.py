@@ -95,7 +95,7 @@ class LogParser:
             print(f"Failed to parse line: {line.strip()} | Error: {e}")
             return None
 
-    # Parse all logs
+    # Parse all Traces
     def extract_events(self):
         if self._events is not None:
             return self._events

@@ -2,7 +2,7 @@ import csv
 import json
 import os
 from typing import Dict, Any
-from datetime import  datetime
+from datetime import datetime
 
 
 class ReportGenerator:

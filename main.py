@@ -20,7 +20,7 @@ def main():
     thresholds = load_yaml(r"config/thresholds.yaml")
 
     # parser
-    parser = LogParser(r"logs/success.log")
+    parser = LogParser(r"Traces/success.log")
     events = parser.extract_events()
 
     # validator
