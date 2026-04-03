@@ -1,5 +1,6 @@
 import re
 from typing import List
+from pathlib import Path
 from datetime import datetime
 
 from .event_model import Event
@@ -18,7 +19,7 @@ class LogParser:
         r"(\w+)\s*([<>])\s*(.+)"
     )
 
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: Path):
         self.filepath = filepath
         self._events = None
 
