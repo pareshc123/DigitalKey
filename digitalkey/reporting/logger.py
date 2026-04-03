@@ -2,6 +2,7 @@ import sys
 import logging
 from pathlib import Path
 from datetime import datetime
+from logging.handlers import TimedRotatingFileHandler
 
 
 def _find_project_root(start_path: Path) -> Path:
@@ -19,25 +20,31 @@ LOG_FORMAT = "[%(asctime)s.%(msecs)3d] [%(levelname)s] [%(name)s] %(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
-def get_logger(name: str) -> logging.Logger:
+def _setup_logger(log_level: str = "INFO") -> None:
 
-    logger = logging.getLogger(name)
+    """
+    Initialize logging configuration once in main
+    e.g.:
 
-    # Avoid duplicate handlers
-    if logger.handlers:
-        return logger
-
-    logger.setLevel(logging.DEBUG)
+    from digitalkey.reporting.logger import setup_logger
+    setup_logger("DEBUG")
+    """
 
     # create Logs directory if not exists
     LOG_DIR.mkdir(exist_ok=True)
 
     # file name with timestamp
-    file_name = LOG_DIR / datetime.now().strftime("run_%Y-%m-%d_%H-%M-%S.log")
+    log_file = LOG_DIR / datetime.now().strftime("run_%Y-%m-%d_%H-%M-%S.log")
 
-    # Handlers
-    console_handler = logging.StreamHandler(sys.stdout)
-    file_handler = logging.FileHandler(file_name, encoding="utf-8")
+    # create root logger
+    level = getattr(logging, log_level.upper(), logging.INFO)
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level)
+
+    # Avoid duplicate handlers
+    if root_logger.handlers:
+        return
 
     # Format
     formatter = logging.Formatter(
@@ -45,15 +52,24 @@ def get_logger(name: str) -> logging.Logger:
         DATE_FORMAT
     )
 
+    # Console Handler
+    console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
+
+    # File Handler with rotation (daily)
+    file_handler = TimedRotatingFileHandler(
+        log_file,
+        when="midnight",
+        interval=1,
+        backupCount=7,  # keep last 7 days
+        encoding="utf-8"
+    )
     file_handler.setFormatter(formatter)
 
-    logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
-
-    return logger
+    root_logger.addHandler(console_handler)
+    root_logger.addHandler(file_handler)
 
 
-if __name__ == "__main__":
-
-    lg = get_logger(__name__)
+# if __name__ == "__main__":
+#
+#     lg = get_logger(__name__)
