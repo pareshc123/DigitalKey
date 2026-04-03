@@ -3,7 +3,6 @@ import time
 import logging
 from pathlib import Path
 from datetime import datetime
-from logging.handlers import TimedRotatingFileHandler
 
 
 def _find_project_root(start_path: Path) -> Path:
@@ -100,12 +99,9 @@ def _setup_logger(log_level: str = "INFO") -> None:
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(ColorFormatter(LOG_FORMAT, DATE_FORMAT))
 
-    # File Handler with rotation (daily)
-    file_handler = TimedRotatingFileHandler(
+    # File Handle
+    file_handler = logging.FileHandler(
         log_file,
-        when="midnight",
-        interval=1,
-        backupCount=7,  # keep last 7 days
         encoding="utf-8"
     )
     file_handler.setFormatter(formatter)
