@@ -16,8 +16,17 @@ BASE_DIR = _find_project_root(Path(__file__).resolve())
 LOG_DIR = BASE_DIR / "logs"
 REPORT_DIR = BASE_DIR / "reports"
 
-LOG_FORMAT = "[%(asctime)s.%(msecs)3d] [%(levelname)s] [%(name)s] %(message)s"
-DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+class MicrosecondFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        dt = datetime.fromtimestamp(record.created)
+        if datefmt:
+            return dt.strftime(datefmt)
+        return dt.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+
+LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
 def _setup_logger(log_level: str = "INFO") -> None:
@@ -47,7 +56,7 @@ def _setup_logger(log_level: str = "INFO") -> None:
         return
 
     # Format
-    formatter = logging.Formatter(
+    formatter = MicrosecondFormatter(
         LOG_FORMAT,
         DATE_FORMAT
     )
@@ -80,8 +89,3 @@ def get_logger(name: str) -> logging.Logger:
     """
 
     return logging.getLogger(name)
-
-
-# if __name__ == "__main__":
-#
-#     lg = get_logger(__name__)
