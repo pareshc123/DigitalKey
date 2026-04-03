@@ -29,25 +29,51 @@ def main():
 
     base_dir = Path(__file__).resolve().parent
 
-    # load config and thresholds
-    logger.info("Loading configuration files")
+    try:
 
-    config = load_yaml(base_dir / "config/test_config.yaml")
+        # load config and thresholds
+        logger.info("Loading configuration files")
 
-    # load threshold
-    thresholds = load_yaml(base_dir / "config/thresholds.yaml")
+        config_file = base_dir / "config/test_config.yaml"
+        thresholds_file = base_dir / "config/thresholds.yaml"
 
-    # parser
-    parser = LogParser(r"Traces/success.log")
-    events = parser.extract_events()
+        config = load_yaml(config_file)
+        thresholds = load_yaml(thresholds_file)
 
-    # validator
-    validator = Validator(events, config, thresholds)
-    result = validator.run_all_validators(test_name=config["test"]["name"])
+        if not config or not thresholds:
+            logger.error("Missing configuration. Abort execution.")
+            return
 
-    # report
-    reporter = ReportGenerator(config)
-    reporter.generate(result)
+        # Parse traces into events
+        logger.info("Parsing input logs")
+        log_path = base_dir / "Traces/auth_failure.log"
+
+        parser = LogParser(log_path)
+        events = parser.extract_events()
+
+        if not events:
+            logger.error("No events parsed. Aborting execution.")
+            return
+
+        logger.debug(f"Parsed {len(events)} events")
+
+        # validation
+        logger.info("Running validation")
+        validator = Validator(events, config, thresholds)
+        result = validator.run_all_validators(test_name=config["test"]["name"])
+        logger.info("Validation completed")
+
+        # Reporting
+        logger.info("Generating report")
+        reporter = ReportGenerator(config)
+        reporter.generate(result)
+        logger.info("Report generation completed")
+
+    except Exception as e:
+        logger.exception("Unexpected error during execution: ", e)
+
+    finally:
+        logger.info("Digital Key Validation finished")
 
 
 if __name__ == "__main__":
