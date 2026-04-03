@@ -15,8 +15,8 @@ def load_yaml(path: Path):
         with open(path, "r") as file:
             logger.debug(f"{path.name}.yaml opened successfully.")
             return yaml.safe_load(file)
-    except Exception as e:
-        logger.exception(f"Failed to open {path.name} file. Exception: ", e)
+    except Exception:
+        logger.exception(f"Failed to open {path.name} file")
         return None
 
 
@@ -69,8 +69,8 @@ def main():
         reporter.generate(result)
         logger.info("Report generation completed")
 
-    except Exception as e:
-        logger.exception("Unexpected error during execution: ", e)
+    except Exception:
+        logger.exception("Unexpected error during execution")
 
     finally:
         logger.info("Digital Key Validation finished")
