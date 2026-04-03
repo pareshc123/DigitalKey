@@ -123,22 +123,3 @@ def get_logger(name: str) -> logging.Logger:
     """
 
     return logging.getLogger(name)
-
-
-if __name__ == "__main__":
-
-    _setup_logger("DEBUG")
-    lg = get_logger(__name__)
-
-    lg.info("INFO level")
-    time.sleep(1)
-    lg.debug("DEBUG level")
-    time.sleep(1.25)
-
-    lg.critical("CRITICAL level")
-    time.sleep(0.25)
-
-    lg.warning("WARN level")
-    time.sleep(2.55)
-
-    lg.error("ERROR level")
