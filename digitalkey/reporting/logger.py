@@ -70,6 +70,18 @@ def _setup_logger(log_level: str = "INFO") -> None:
     root_logger.addHandler(file_handler)
 
 
+def get_logger(name: str) -> logging.Logger:
+    """
+    import logger in all other files:
+
+    from digitalkey.reporting.logger import get_logger
+    logger = get_logger(__name__)
+    logger.info("Validation started")
+    """
+
+    return logging.getLogger(name)
+
+
 # if __name__ == "__main__":
 #
 #     lg = get_logger(__name__)
