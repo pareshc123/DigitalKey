@@ -1,5 +1,4 @@
 import sys
-import time
 import logging
 from pathlib import Path
 from datetime import datetime
@@ -63,7 +62,7 @@ class ColorFormatter(logging.Formatter):
         return message
 
 
-def _setup_logger(log_level: str = "INFO") -> None:
+def setup_logger(log_level: str = "INFO") -> None:
 
     """
     Initialize logging configuration once in main
