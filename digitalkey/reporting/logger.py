@@ -36,7 +36,7 @@ class ColorFormatter(logging.Formatter):
         "INFO": "\033[32m",             # Green
         "WARNING": "\033[33m",          # Yellow
         "ERROR": "\033[31m",            # Red
-        "CRITICAL": "\033[41m",         # Red background
+        "CRITICAL": "\033[31;1m",       # Bold Red
     }
     RESET = "\033[0m"
 
@@ -87,7 +87,10 @@ def _setup_logger(log_level: str = "INFO") -> None:
 
     # Avoid duplicate handlers
     if root_logger.handlers:
-        return
+        root_logger.handlers.clear()
+
+    # prevents duplicates in case our modules uses its own handler or external libs configure logging
+    root_logger.propagate = False
 
     # Format
     formatter = MicrosecondFormatter(
