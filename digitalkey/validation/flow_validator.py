@@ -1,7 +1,10 @@
 from typing import List, Dict, Any
 
 from digitalkey.core.event_model import Event
+from digitalkey.reporting.logger import get_logger
 from .utlities_validator import Steps, STEP_MAPPING
+
+logger = get_logger(__name__)
 
 
 class FlowValidator:
@@ -9,6 +12,7 @@ class FlowValidator:
     def __init__(self, events: List[Event]):
 
         self.events = events
+        logger.debug(f"FlowValidator initialized with {len(events)} events")
 
     @classmethod
     def _required_steps(cls) -> List[Steps]:
@@ -26,21 +30,31 @@ class FlowValidator:
     # Public API
     def validate_full_flow(self) -> Dict[str, Any]:
 
+        logger.info("Running full flow validation")
+
+        event_steps = self._extract_steps()
+        logger.debug(f"Extracted flow steps: {[step.name for step in event_steps]}")
+
         event_steps = self._extract_steps()
 
         # 1. Dependency validation (most meaningful errors)
         dependency_error = self._check_dependencies(event_steps)
         if dependency_error:
+            logger.warning(f"Flow dependency validation failed: {dependency_error}")
             return self._fail(dependency_error)
 
         # 2. Order validation
         if not self._check_order(event_steps):
+            logger.warning("Flow order validation failed")
             return self._fail("Invalid step order detected")
 
         # 3. Missing steps
         missing_steps_error = self._check_missing_steps(event_steps)
         if missing_steps_error:
+            logger.warning(f"Flow missing step validation failed: {missing_steps_error}")
             return self._fail(missing_steps_error)
+
+        logger.info("Full flow validation passed")
 
         # Return success result
         return {
@@ -49,8 +63,8 @@ class FlowValidator:
             "details": "Valid full unlock sequence",
             "metrics": {
                 "total_steps": len(event_steps),
-                "steps": event_steps
-            }
+                "steps": [step.name for step in event_steps],
+            },
         }
 
     # Step Extraction
@@ -60,6 +74,7 @@ class FlowValidator:
         for event in self.events:
             step = self._map_event_to_steps(event)
             if step:
+                logger.debug(f"Mapped event to step: {event.message} -> {step.name}")
                 steps.append(step)
 
         return steps
@@ -144,5 +159,5 @@ class FlowValidator:
             "name": "full_flow",
             "status": "FAIL",
             "details": message,
-            "metrics": {}
+            "metrics": {},
         }
