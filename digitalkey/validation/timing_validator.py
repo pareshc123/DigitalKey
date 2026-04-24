@@ -2,6 +2,9 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 from digitalkey.core.event_model import Event
+from digitalkey.reporting.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class TimingValidator:
@@ -16,8 +19,12 @@ class TimingValidator:
         self.system = threshold.get("system", {})
         self.security = threshold.get("security", {})
 
+        logger.debug(f"TimingValidator initialized with {len(events)} events")
+
     # public API
     def validate_auth_timing(self) -> Dict[str, Any]:
+        logger.info("Validating AUTH timing")
+
         t_req = self._find_event_time("AUTH_REQUEST")
         r_res = self._find_event_time("AUTH_RESPONSE")
 
@@ -39,6 +46,8 @@ class TimingValidator:
         )
 
     def validate_detection_to_auth(self) -> Dict[str, Any]:
+        logger.info("Validating detection to AUTH timing")
+
         t_detect = self._find_event_time("Digital Key device detected")
         r_auth = self._find_event_time("Session initiated")
 
@@ -60,6 +69,8 @@ class TimingValidator:
         )
 
     def validate_unlock_timing(self):
+        logger.info("Validating proximity to unlock timing")
+
         t_prox = self._find_event_time("Proximity validated")
         t_unlock = self._find_event_time("Door unlock command issued")
 
@@ -83,6 +94,8 @@ class TimingValidator:
         )
 
     def validate_unlock_confirmation(self):
+        logger.info("Validating unlock confirmation timing")
+
         t_req = self._find_event_time("Door unlock command issued")
         t_conf = self._find_event_time("Door unlock confirmed")
 
@@ -106,6 +119,8 @@ class TimingValidator:
         )
 
     def validate_session_duration(self):
+        logger.info("Validating session duration")
+
         t_start = self._find_event_time("Session initiated")
         t_end = self._find_event_time("Session terminated successfully")
 
@@ -133,8 +148,10 @@ class TimingValidator:
 
         for event in self.events:
             if keyword in event.message:
+                logger.debug(f"Found event for keyword '{keyword}': {event.timestamp}")
                 return event.timestamp
 
+        logger.debug(f"No event found for keyword: {keyword}")
         return None
 
     @staticmethod
@@ -143,16 +160,19 @@ class TimingValidator:
 
     @staticmethod
     def _fail(name: str, details: str, metrics: Dict[str, Any] = None) -> Dict[str, Any]:
+        logger.warning(f"{name} failed: {details}")
 
         return {
             "name": name,
             "status": "FAIL",
             "details": details,
-            "metrics": metrics or {}
+            "metrics": metrics or {},
         }
 
     @staticmethod
     def _pass(name: str, details: str, metrics: Dict[str, Any]) -> Dict[str, Any]:
+        logger.debug(f"{name} passed: {details}")
+
         return {
             "name": name,
             "status": "PASS",
