@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 
 from digitalkey.core.event_model import Event
 from digitalkey.reporting.logger import get_logger
-from .utlities_validator import Steps, STEP_MAPPING
+from .utilities_validator import Steps, STEP_MAPPING
 
 logger = get_logger(__name__)
 

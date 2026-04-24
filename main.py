@@ -46,7 +46,7 @@ def main():
 
         # Parse traces into events
         logger.info("Parsing input logs")
-        log_path = base_dir / "Traces/auth_failure.log"
+        log_path = base_dir / "ECU_Traces/auth_failure.log"
 
         parser = LogParser(log_path)
         events = parser.extract_events()

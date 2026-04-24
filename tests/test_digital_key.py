@@ -5,7 +5,7 @@ from digitalkey.validation.validator import Validator
 
 @pytest.fixture()
 def validator():
-    parser = LogParser(r"Python/AutomationTesting/Automotive/DigitalKey/Traces/failed_dk_log.txt")
+    parser = LogParser(r"Python/AutomationTesting/Automotive/DigitalKey/ECU_Traces/failed_dk_log.txt")
     events = parser.extract_events()
     return Validator(events)
 

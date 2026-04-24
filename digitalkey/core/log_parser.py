@@ -114,7 +114,7 @@ class LogParser:
             logger.exception(f"Failed to parse line: {line.strip()}")
             return None
 
-    # Parse all Traces
+    # Parse all ECU_Traces
     def extract_events(self):
         if self._events is not None:
             logger.debug("Returning cached parsed events")
