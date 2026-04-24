@@ -24,18 +24,17 @@ class MicrosecondFormatter(logging.Formatter):
         return dt.strftime("%Y-%m-%d %H:%M:%S.%f")
 
 
-LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
+LOG_FORMAT = "[%(asctime)s] [%(levelname)s]%(level_pad)s[%(shortname)s]%(name_pad)s%(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
 class ColorFormatter(logging.Formatter):
-
     COLORS = {
-        "DEBUG": "\033[36m",            # Cyan
-        "INFO": "\033[32m",             # Green
-        "WARNING": "\033[33m",          # Yellow
-        "ERROR": "\033[31m",            # Red
-        "CRITICAL": "\033[31;1m",       # Bold Red
+        "DEBUG": "\033[36m",       # Cyan
+        "INFO": "\033[32m",        # Green
+        "WARNING": "\033[33m",     # Yellow
+        "ERROR": "\033[31m",       # Red
+        "CRITICAL": "\033[31;1m",  # Bold Red
     }
     RESET = "\033[0m"
 
@@ -63,7 +62,6 @@ class ColorFormatter(logging.Formatter):
 
 
 def setup_logger(log_level: str = "INFO") -> None:
-
     """
     Initialize logging configuration once in main
     e.g.:
@@ -121,4 +119,22 @@ def get_logger(name: str) -> logging.Logger:
     logger.info("Validation started")
     """
 
-    return logging.getLogger(name)
+    logger = logging.getLogger(name)
+
+    shortname = name.split(".")[-1]
+
+    def add_extra(record: logging.LogRecord) -> bool:
+
+        record.shortname = shortname
+
+        # align level column
+        record.level_pad = " " * max(1, 8 - len(record.levelname))
+
+        # align module/name column
+        record.name_pad = " " * max(1, 18 - len(record.shortname))
+
+        return True
+
+    logger.addFilter(add_extra)
+
+    return logger
