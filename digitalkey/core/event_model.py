@@ -6,8 +6,8 @@ from typing import Dict, Any
 @dataclass
 class Event:
     timestamp: datetime
-    module: str
     level: str
+    module: str
     message: str
     attributes: Dict[str, Any] = field(default_factory=dict)
 
