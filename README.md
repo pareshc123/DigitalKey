@@ -20,35 +20,35 @@ DigitalKey/
     │
     ├── digitalkey/
     │   ├── core/
-    │   │   ├── log_parser.py        # parsing (keep, improve)
-    │   │   ├── event_model.py       # structured event object (NEW)
-    │   │   └── session_tracker.py   # session correlation (NEW)
+    │   │   ├── log_parser.py        # parsing
+    │   │   ├── event_model.py       # structured event object
+    │   │   └── session_tracker.py   # session correlation
     │   │
     │   ├── validation/
-    │   │   ├── validator.py         # extend heavily
-    │   │   ├── timing_validator.py  # NEW (timing checks)
-    │   │   ├── flow_validator.py    # NEW (scenario validation)
-    │   │   └── state_machine.py     # NEW (critical)
+    │   │   ├── validator.py         # validator runner
+    │   │   ├── timing_validator.py  # (timing checks)
+    │   │   ├── flow_validator.py    # (scenario validation)
+    │   │   └── state_machine.py     # (state validator)
     │   │
     │   ├── analysis/
-    │   │   ├── trace_analyzer.py    # filtering, debugging (NEW)
-    │   │   └── metrics.py           # latency, stats (NEW)
+    │   │   ├── trace_analyzer.py    # todo: filtering, debugging
+    │   │   └── metrics.py           # todo: latency, stats
     │   │
     │   ├── reporting/
-    │   │   ├── report_generator.py  # improved reporting
-    │   │   ├── logger.py            # execution logger (NEW)
-    │   │   └── export.py            # CSV/JSON output (NEW)
+    │   │   ├── report_generator.py  # reporting
+    │   │   ├── logger.py            # execution logger
+    │   │   └── export.py            # CSV/JSON output
     │
     ├── tests/
     │   ├── unit/
-    │   ├── integration/             # scenario-level tests
-    │   └── regression/              # data-driven tests
+    │   ├── integration/             # todo: scenario-level tests
+    │   └── regression/              # todo: data-driven tests
     │
     ├── reports/
     │   ├── latest/
     │   └── history/
     │
     ├── main.py                      # test runner
-    ├── cli.py                       # optional CLI entry (NEW)
+    ├── cli.py                       # todo: optional CLI entry
     ├── pyproject.toml
     └── README.md
