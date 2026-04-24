@@ -4,6 +4,9 @@ from pathlib import Path
 from datetime import datetime
 
 from .event_model import Event
+from digitalkey.reporting.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class LogParser:
@@ -22,10 +25,23 @@ class LogParser:
     def __init__(self, filepath: Path):
         self.filepath = filepath
         self._events = None
+        logger.debug(f"LogParser initialized with file: {self.filepath}")
 
     def read_logs(self) -> List[str]:
-        with open(self.filepath) as f:
-            return f.readlines()
+        try:
+            logger.info(f"reading log file: {self.filepath}")
+            with open(self.filepath) as f:
+                lines = f.readlines()
+            logger.debug(f"Read {len(lines)} raw log lines")
+            return lines
+
+        except FileNotFoundError:
+            logger.exception(f"Log file not found: {self.filepath}")
+            return []
+
+        except Exception:          # noqa
+            logger.exception(f"Failed to read log file: {self.filepath}")
+            return []
 
     # Extract MetaData from Message
     def extract_metadata(self, message: str) -> dict:
@@ -73,6 +89,7 @@ class LogParser:
         match = self.LOG_PATTERN.search(line)
 
         if not match:
+            logger.warning(f"Malformed log line skipped: {line.strip()}")
             return None  # malformed line
 
         try:
@@ -92,14 +109,17 @@ class LogParser:
                 message=message,
                 attributes=metadata,
             )
-        except Exception as e:
-            print(f"Failed to parse line: {line.strip()} | Error: {e}")
+        except Exception:   # noqa
+            logger.exception(f"Failed to parse line: {line.strip()}")
             return None
 
     # Parse all Traces
     def extract_events(self):
         if self._events is not None:
+            logger.debug("Returning cached parsed events")
             return self._events
+
+        logger.info("Extracting events from log file")
 
         events = []
         for line in self.read_logs():
@@ -108,14 +128,21 @@ class LogParser:
                 events.append(event)
 
         self._events = events
+        logger.info(f"Extracted {len(events)} valid events")
         return events
 
     # Filters
     def filter_by_error(self) -> List[Event]:
-        return [err for err in self.extract_events() if err.level == "ERROR"]
+        errors = [err for err in self.extract_events() if err.level == "ERROR"]
+        logger.debug(f"Found {len(errors)} ERROR events")
+        return errors
 
     def filter_by_module(self, module_name: str) -> List[Event]:
-        return [mod for mod in self.extract_events() if mod.module == module_name]
+        events = [mod for mod in self.extract_events() if mod.module == module_name]
+        logger.debug(f"Found {len(events)} events for module: {module_name}")
+        return events
 
     def filter_by_time(self, start: datetime, end: datetime) -> List[Event]:
-        return [t for t in self.extract_events() if start <= t.timestamp <= end]
+        events = [t for t in self.extract_events() if start <= t.timestamp <= end]
+        logger.debug(f"Found {len(events)} events between {start} and {end}")
+        return events
