@@ -13,7 +13,7 @@ def load_yaml(path: Path):
 
     try:
         with open(path, "r") as file:
-            logger.debug(f"{path.name}.yaml opened successfully.")
+            logger.debug(f"{path.name} opened successfully.")
             return yaml.safe_load(file)
     except Exception:
         logger.exception(f"Failed to open {path.name} file")
