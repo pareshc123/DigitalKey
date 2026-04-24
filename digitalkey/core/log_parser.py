@@ -30,6 +30,7 @@ class LogParser:
     def read_logs(self) -> List[str]:
         try:
             logger.info(f"reading log file: {self.filepath}")
+            # todo: not good for large files --> Next feature: iterate over the file
             with open(self.filepath) as f:
                 lines = f.readlines()
             logger.debug(f"Read {len(lines)} raw log lines")
@@ -109,7 +110,7 @@ class LogParser:
                 message=message,
                 attributes=metadata,
             )
-        except Exception:   # noqa
+        except Exception:  # noqa
             logger.exception(f"Failed to parse line: {line.strip()}")
             return None
 
