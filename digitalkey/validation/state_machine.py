@@ -1,7 +1,10 @@
 from typing import List, Dict, Any
 
 from digitalkey.core.event_model import Event
+from digitalkey.reporting.logger import get_logger
 from .utlities_validator import STATE, STATE_TRANSITION_MAP
+
+logger = get_logger(__name__)
 
 
 class StateMachine:
@@ -11,24 +14,36 @@ class StateMachine:
         self.current_state = STATE.IDLE
         self.visited_states = [self.current_state]  # to track all the visited states
 
+        logger.debug(f"StateMachine initialized with {len(events)} events")
+        logger.debug(f"Initial state: {self.current_state.name}")
+
     # Public API
     def validate_state(self) -> Dict[str, Any]:
+        logger.info("Running state machine validation")
 
         for event in self.events:
             next_state = self._map_event_to_state(event)
+
+            logger.debug(f"Event mapped to state: {event.message} -> {next_state.name}")
 
             if not next_state:
                 continue
 
             if not self.is_valid_transition(self.current_state, next_state):
-                return self._fail(
-                    f"Invalid transition: {self.current_state.name} → {next_state.name}",
-                    event.message
+                reason = (
+                    f"Invalid transition: "
+                    f"{self.current_state.name} -> {next_state.name}"
                 )
+                logger.warning(reason)
+                return self._fail(reason, event.message)
+
+            logger.debug(f"Valid transition: {self.current_state.name} -> {next_state.name}")
 
             # Valid transition
             self.current_state = next_state
             self.visited_states.append(next_state)
+
+        logger.info("State machine validation passed")
 
         return self._pass()
 
@@ -77,8 +92,8 @@ class StateMachine:
             "details": "All transitions valid",
             "metrics": {
                 "final_state": self.current_state.name,
-                "states_visited": [s.name for s in self.visited_states]
-            }
+                "states_visited": [s.name for s in self.visited_states],
+            },
         }
 
     def _fail(self, reason: str, event: str) -> Dict[str, Any]:
@@ -89,6 +104,6 @@ class StateMachine:
             "metrics": {
                 "failed_event": event,
                 "current_state": self.current_state.name,
-                "states_visited": [s.name for s in self.visited_states]
-            }
+                "states_visited": [s.name for s in self.visited_states],
+            },
         }
