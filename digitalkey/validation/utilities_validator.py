@@ -47,3 +47,41 @@ STATE_TRANSITION_MAP = {
     STATE.ACCESS_GRANTED: [STATE.TERMINATED],
     STATE.TERMINATED: []
 }
+
+EVENT_PATTERNS = {
+    Steps.DEVICE_DETECTED: [
+        "Digital Key device detected",
+        "Device detected",
+        "BLE device detected",
+    ],
+    Steps.AUTH_STARTED: [
+        "Session initiated",
+        "Authentication started",
+        "AUTH_REQUEST",
+    ],
+    Steps.AUTH_SUCCESS: [
+        "Authentication successful",
+        "AUTH_RESPONSE",
+        "Authentication OK",
+    ],
+    Steps.RANGING_STARTED: [
+        "Ranging session started",
+        "UWB ranging started",
+    ],
+    Steps.PROXIMITY_VALIDATED: [
+        "Proximity validated",
+        "Distance validated",
+    ],
+    Steps.UNLOCK_REQUESTED: [
+        "Door unlock command issued",
+        "Unlock requested",
+    ],
+    Steps.UNLOCK_CONFIRMED: [
+        "Door unlock confirmed",
+        "Unlock confirmed",
+    ],
+    Steps.SESSION_TERMINATED: [
+        "Session terminated",
+        "Session terminated successfully",
+    ],
+}
