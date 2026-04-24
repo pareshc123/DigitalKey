@@ -8,7 +8,7 @@ DigitalKey/
     │   ├── thresholds.yaml      # timing limits, distance thresholds
     │   └── test_config.yaml     # test execution settings
     │
-    ├── logs/                    # Raw logs (input)
+    ├── Traces/                    # Raw Traces (input)
     │   ├── happy_path.log
     │   ├── delayed_auth.log
     │   ├── uwb_failure.log
