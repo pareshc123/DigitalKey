@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 
 from digitalkey.core.event_model import Event
 from digitalkey.reporting.logger import get_logger
-from .utilities_validator import Steps, STEP_MAPPING
+from .utilities_validator import Steps, match_step
 
 logger = get_logger(__name__)
 
@@ -34,8 +34,6 @@ class FlowValidator:
 
         event_steps = self._extract_steps()
         logger.debug(f"Extracted flow steps: {[step.name for step in event_steps]}")
-
-        event_steps = self._extract_steps()
 
         # 1. Dependency validation (most meaningful errors)
         dependency_error = self._check_dependencies(event_steps)
@@ -82,11 +80,7 @@ class FlowValidator:
     @staticmethod
     def _map_event_to_steps(event: Event) -> Steps | None:
 
-        for key, step in STEP_MAPPING.items():
-            if key in event.message:
-                return step
-
-        return None
+        return match_step(event.message)
 
     # Missing Step Validation
     def _check_missing_steps(self, steps: List[Steps]) -> str | None:
