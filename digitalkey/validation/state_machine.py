@@ -24,7 +24,7 @@ class StateMachine:
         for event in self.events:
             next_state = self._map_event_to_state(event)
 
-            if not next_state:
+            if next_state is None:
                 continue
 
             logger.debug(f"Event mapped to state: {event.message} -> {next_state.name}")
