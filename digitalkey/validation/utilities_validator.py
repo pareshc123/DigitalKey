@@ -15,17 +15,17 @@ class Steps(str, Enum):
 EVENT_PATTERNS = {
     Steps.DEVICE_DETECTED: [
         "Digital Key device detected",
-        "Device detected",
         "BLE device detected",
+        "Device detected",
     ],
     Steps.AUTH_STARTED: [
-        "Session initiated",
         "Authentication started",
+        "Session initiated",
         "AUTH_REQUEST",
     ],
     Steps.AUTH_SUCCESS: [
         "Authentication successful",
-        "AUTH_RESPONSE",
+        "AUTH_RESPONSE valid",
         "Authentication OK",
     ],
     Steps.RANGING_STARTED: [
@@ -45,8 +45,8 @@ EVENT_PATTERNS = {
         "Unlock confirmed",
     ],
     Steps.SESSION_TERMINATED: [
-        "Session terminated",
         "Session terminated successfully",
+        "Session terminated",
     ],
 }
 
