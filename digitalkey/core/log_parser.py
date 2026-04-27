@@ -30,11 +30,10 @@ class LogParser:
     def read_logs(self) -> List[str]:
         try:
             logger.info(f"reading log file: {self.filepath}")
-            # todo: not good for large files --> Next feature: iterate over the file
-            with open(self.filepath) as f:
-                lines = f.readlines()
-            logger.debug(f"Read {len(lines)} raw log lines")
-            return lines
+
+            with self.filepath.open("r", encoding="utf-8", errors="replace") as f:
+                for line in f:
+                    yield line
 
         except FileNotFoundError:
             logger.exception(f"Log file not found: {self.filepath}")
