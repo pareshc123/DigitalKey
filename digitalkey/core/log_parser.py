@@ -89,6 +89,9 @@ class LogParser:
 
         match = self.LOG_PATTERN.search(line)
 
+        if not line.strip():
+            return None
+
         if not match:
             logger.warning(f"Malformed log line skipped: {line.strip()}")
             return None  # malformed line
