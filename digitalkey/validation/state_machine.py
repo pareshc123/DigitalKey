@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 
 from digitalkey.core.event_model import Event
 from digitalkey.reporting.logger import get_logger
-from .utilities_validator import STATE, STATE_TRANSITION_MAP
+from .utilities_validator import STATE, STATE_TRANSITION_MAP, STEP_TO_STATE, match_step
 
 logger = get_logger(__name__)
 
@@ -50,33 +50,12 @@ class StateMachine:
     # Event to State Mapping
     @staticmethod
     def _map_event_to_state(event: Event) -> STATE | None:
-        msg = event.message
+        step = match_step(event.message)
 
-        if "Digital Key device detected" in msg:
-            return STATE.DETECTED
+        if step is None:
+            return None
 
-        if "Session initiated" in msg:
-            return STATE.AUTHENTICATING
-
-        if "Authentication successful" in msg:
-            return STATE.AUTHENTICATED
-
-        if "Ranging session started" in msg:
-            return STATE.RANGING
-
-        if "Proximity validated" in msg:
-            return STATE.PROXIMITY_CONFIRMED
-
-        if "Door unlock command issued" in msg:
-            return STATE.ACCESS_REQUESTED
-
-        if "Door unlock confirmed" in msg:
-            return STATE.ACCESS_GRANTED
-
-        if "Session terminated" in msg:
-            return STATE.TERMINATED
-
-        return None
+        return STEP_TO_STATE.get(step)
 
     # Transition Validation
     @staticmethod
