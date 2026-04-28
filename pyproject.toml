@@ -1,6 +1,6 @@
 [project]
 name = "digitalkey"
-version = "0.5.3"
+version = "0.5.4"
 description = "Digital Key Test Automation Framework"
 authors = [{name="Paresh J Choudhary"}]
 dependencies = []
