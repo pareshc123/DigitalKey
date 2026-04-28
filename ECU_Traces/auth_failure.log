@@ -1,10 +1,56 @@
-2026-03-20 13:00:00.001 [INFO]  [BLE]        Scanner started
-2026-03-20 13:00:00.100 [INFO]  [BLE]        Digital Key device detected (ID=DK-004)
+2026-03-20 15:59:59.900 [INFO]  [SYSTEM]     Vehicle wake-up triggered (source=handle_touch)
+2026-03-20 15:59:59.910 [DEBUG] [SYSTEM]     Initializing subsystems (BLE,UWB,AUTH)
 
-2026-03-20 13:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_004)
-2026-03-20 13:00:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xFFFF)
+2026-03-20 16:00:00.001 [INFO]  [BLE]        Scanner started (interface=hci0)
 
-2026-03-20 13:00:00.350 [ERROR] [AUTH]       AUTH_RESPONSE invalid (reason=signature_mismatch)
-2026-03-20 13:00:00.360 [INFO]  [AUTH]       Authentication failed
+# --- noisy BLE environment
+2026-03-20 16:00:00.020 [DEBUG] [BLE]        Advertisement received (MAC=10:AA:10:AA:10:AA, RSSI=-93 dBm)
+2026-03-20 16:00:00.030 [DEBUG] [BLE]        Advertisement received (MAC=22:BB:22:BB:22:BB, RSSI=-89 dBm)
+2026-03-20 16:00:00.040 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:04, RSSI=-69 dBm)
 
-2026-03-20 13:00:00.500 [INFO]  [SYSTEM]     Access denied
+2026-03-20 16:00:00.050 [INFO]  [BLE]        Digital Key device detected (ID=DK-004, MAC=AA:BB:CC:DD:04)
+
+# --- connection instability
+2026-03-20 16:00:00.060 [DEBUG] [BLE]        Connection attempt initiated
+2026-03-20 16:00:00.090 [WARN]  [BLE]        Packet collision detected
+2026-03-20 16:00:00.120 [DEBUG] [BLE]        Retry connection (attempt=2)
+2026-03-20 16:00:00.150 [INFO]  [BLE]        Connection established
+
+# ---- detection_to_auth ≈ 100ms (PASS)
+
+2026-03-20 16:00:00.180 [INFO]  [AUTH]       Session initiated (session_id=sess_004)
+2026-03-20 16:00:00.190 [DEBUG] [AUTH]       Authentication started (method=challenge_response)
+
+# --- first attempt
+2026-03-20 16:00:00.200 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xDEAD01, attempt=1)
+2026-03-20 16:00:00.260 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=60ms)
+2026-03-20 16:00:00.270 [ERROR] [AUTH]       AUTH_RESPONSE invalid (signature mismatch)
+
+# --- retry attempt
+2026-03-20 16:00:00.300 [WARN]  [AUTH]       Retrying authentication (attempt=2)
+2026-03-20 16:00:00.310 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xDEAD02, attempt=2)
+2026-03-20 16:00:00.380 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=70ms)
+2026-03-20 16:00:00.390 [ERROR] [AUTH]       AUTH_RESPONSE invalid (replay detected)
+
+# --- replay protection triggered
+2026-03-20 16:00:00.420 [WARN]  [SECURITY]   Replay attack suspected (window=100ms)
+
+# --- final attempt
+2026-03-20 16:00:00.450 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xDEAD03, attempt=3)
+2026-03-20 16:00:00.550 [WARN]  [AUTH]       AUTH_RESPONSE timeout
+
+# --- authentication fails definitively
+2026-03-20 16:00:00.600 [ERROR] [AUTH]       Authentication failed (reason=max_retries_exceeded, session_id=sess_004)
+
+# --- state remains AUTHENTICATING (no AUTH_SUCCESS)
+
+2026-03-20 16:00:00.700 [WARN]  [SESSION]    Transition blocked (AUTHENTICATING -> AUTHENTICATED)
+
+# --- ensure NO UWB activity
+2026-03-20 16:00:00.800 [DEBUG] [UWB]        UWB subsystem idle (auth_not_completed)
+
+# --- ensure NO ACCESS attempts
+2026-03-20 16:00:00.900 [WARN]  [ACCESS]     Unlock request blocked (reason=authentication_failed)
+
+# --- cleanup
+2026-03-20 16:00:01.200 [INFO]  [SYSTEM]     Session terminated (reason=auth_failure, session_id=sess_004)
