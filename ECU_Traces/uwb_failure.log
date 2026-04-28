@@ -1,15 +1,68 @@
-2026-03-20 12:00:00.001 [INFO]  [BLE]        Scanner started
-2026-03-20 12:00:00.090 [INFO]  [BLE]        Digital Key device detected (ID=DK-003)
+2026-03-20 13:59:59.900 [INFO]  [SYSTEM]     Vehicle wake-up triggered (source=handle_touch)
+2026-03-20 13:59:59.910 [DEBUG] [SYSTEM]     Initializing subsystems (BLE,UWB,AUTH)
 
-2026-03-20 12:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_003)
-2026-03-20 12:00:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent
-2026-03-20 12:00:00.280 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=70ms)
-2026-03-20 12:00:00.290 [INFO]  [AUTH]       Authentication successful
+2026-03-20 14:00:00.001 [INFO]  [BLE]        Scanner started (interface=hci0)
 
-2026-03-20 12:00:00.400 [INFO]  [UWB]        Ranging session started
-2026-03-20 12:00:00.500 [DEBUG] [UWB]        Distance measured (distance=2.5m)
-2026-03-20 12:00:00.600 [DEBUG] [UWB]        Distance measured (distance=2.2m)
+# --- noisy BLE environment
+2026-03-20 14:00:00.020 [DEBUG] [BLE]        Advertisement received (MAC=10:10:10:10:10:10, RSSI=-92 dBm)
+2026-03-20 14:00:00.030 [DEBUG] [BLE]        Advertisement received (MAC=20:20:20:20:20:20, RSSI=-88 dBm)
+2026-03-20 14:00:00.040 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:03, RSSI=-70 dBm)
 
-2026-03-20 12:00:01.000 [WARN]  [UWB]        Proximity validation failed (distance too large)
+2026-03-20 14:00:00.050 [INFO]  [BLE]        Digital Key device detected (ID=DK-003, MAC=AA:BB:CC:DD:03)
 
-2026-03-20 12:00:01.200 [INFO]  [SYSTEM]     Access denied
+# --- connection instability
+2026-03-20 14:00:00.060 [DEBUG] [BLE]        Connection attempt initiated
+2026-03-20 14:00:00.090 [WARN]  [BLE]        Packet loss detected
+2026-03-20 14:00:00.120 [DEBUG] [BLE]        Retry connection (attempt=2)
+2026-03-20 14:00:00.150 [INFO]  [BLE]        Connection established
+
+# ---- detection_to_auth ≈ 100ms (PASS)
+
+2026-03-20 14:00:00.180 [INFO]  [AUTH]       Session initiated (session_id=sess_003)
+2026-03-20 14:00:00.190 [DEBUG] [AUTH]       Authentication started (method=challenge_response)
+
+2026-03-20 14:00:00.200 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xABC123)
+2026-03-20 14:00:00.260 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=60ms)
+2026-03-20 14:00:00.270 [DEBUG] [AUTH]       AUTH_RESPONSE valid
+2026-03-20 14:00:00.280 [INFO]  [AUTH]       Authentication successful (session_id=sess_003)
+
+# ---- auth timing PASS
+
+2026-03-20 14:00:00.300 [DEBUG] [SESSION]    State updated (AUTHENTICATED)
+
+# --- UWB starts
+2026-03-20 14:00:00.320 [INFO]  [UWB]        Initializing UWB subsystem
+2026-03-20 14:00:00.350 [INFO]  [UWB]        Ranging session started (anchor_id=UWB-3)
+
+# --- chaotic and unstable ranging (THIS IS THE FAILURE CORE)
+2026-03-20 14:00:00.400 [DEBUG] [UWB]        Distance measured (distance=2.8m, quality=low)
+2026-03-20 14:00:00.450 [DEBUG] [UWB]        Distance measured (distance=2.5m, quality=low)
+2026-03-20 14:00:00.500 [WARN]  [UWB]        Signal reflection detected
+2026-03-20 14:00:00.550 [DEBUG] [UWB]        Distance measured (distance=2.7m, quality=low)
+2026-03-20 14:00:00.600 [WARN]  [UWB]        Measurement jitter high (variance=0.9m)
+2026-03-20 14:00:00.650 [DEBUG] [UWB]        Distance measured (distance=2.3m, quality=medium)
+2026-03-20 14:00:00.700 [DEBUG] [UWB]        Distance measured (distance=2.6m, quality=low)
+2026-03-20 14:00:00.750 [DEBUG] [UWB]        Distance measured (distance=2.2m, quality=medium)
+2026-03-20 14:00:00.800 [WARN]  [UWB]        Packet timeout detected
+2026-03-20 14:00:00.850 [DEBUG] [UWB]        Distance measured (distance=2.4m, quality=medium)
+2026-03-20 14:00:00.900 [DEBUG] [UWB]        Distance measured (distance=2.1m, quality=medium)
+2026-03-20 14:00:00.950 [WARN]  [UWB]        Distance variance unstable
+2026-03-20 14:00:01.000 [DEBUG] [UWB]        Applying smoothing filter (window=5)
+
+# --- STILL ABOVE THRESHOLD → NO PROXIMITY VALIDATION
+
+2026-03-20 14:00:01.200 [WARN]  [UWB]        Proximity check failed (distance > 1.5m)
+2026-03-20 14:00:01.400 [WARN]  [UWB]        Ranging retry initiated
+2026-03-20 14:00:01.500 [DEBUG] [UWB]        Distance measured (distance=2.0m)
+2026-03-20 14:00:01.600 [WARN]  [UWB]        Retry failed, still out of range
+
+# --- system decision: abort access
+2026-03-20 14:00:01.800 [WARN]  [ACCESS]     Unlock request blocked (reason=proximity_not_validated)
+
+# --- no UNLOCK_REQUESTED, no UNLOCK_CONFIRMED → correct failure behavior
+
+2026-03-20 14:00:02.000 [DEBUG] [SESSION]    State unchanged (AUTHENTICATED)
+
+# --- cleanup
+2026-03-20 14:00:02.500 [INFO]  [UWB]        Ranging session stopped
+2026-03-20 14:00:03.000 [INFO]  [SYSTEM]     Session terminated (reason=proximity_failure, session_id=sess_003)
