@@ -1,20 +1,104 @@
-2026-03-20 10:20:00.001 [INFO]  [BLE]        Scanner started (interface=hci0)
-2026-03-20 10:20:00.105 [DEBUG] [BLE]        Advertisement received (MAC=F4:12:FA:9C:01:AB, RSSI=-65 dBm)
-2026-03-20 10:20:00.110 [INFO]  [BLE]        Digital Key device detected (ID=DK-001)
+2026-03-20 19:59:59.900 [INFO]  [SYSTEM]     Vehicle wake-up triggered (source=handle_touch)
+2026-03-20 19:59:59.910 [DEBUG] [SYSTEM]     Initializing subsystems (BLE,UWB,AUTH)
 
-2026-03-20 10:20:00.200 [INFO]  [AUTH]       Session initiated (session_id=abc123)
-2026-03-20 10:20:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xA94F2C)
-2026-03-20 10:20:00.320 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=110ms)
-2026-03-20 10:20:00.325 [INFO]  [AUTH]       Authentication successful (session_id=abc123)
+# --- malformed timestamp
+2026-03-20 19:59:XX.920 [DEBUG] [SYSTEM]     Corrupted timestamp example
 
-2026-03-20 10:20:00.500 [INFO]  [UWB]        Ranging session started (anchor_id=UWB-7)
-2026-03-20 10:20:00.620 [DEBUG] [UWB]        Distance measured (distance=1.45m, azimuth=32°)
-2026-03-20 10:20:00.750 [DEBUG] [UWB]        Distance measured (distance=1.40m, azimuth=34°)
-2026-03-20 10:20:00.880 [DEBUG] [UWB]        Distance measured (distance=1.35m, azimuth=35°)
-2026-03-20 10:20:00.950 [INFO]  [UWB]        Proximity validated (threshold < 1.5m)
+# --- valid
+2026-03-20 20:00:00.001 [INFO]  [BLE]        Scanner started (interface=hci0)
 
-2026-03-20 10:20:01.050 [INFO]  [ACCESS]     Door unlock command issued
-2026-03-20 10:20:01.120 [INFO]  [ACCESS]     Door unlock confirmed
+# --- missing brackets
+2026-03-20 20:00:00.010 INFO BLE Advertisement received (MAC=01:01:01:01:01:01, RSSI=-90 dBm)
 
-2026-03-20 10:20:02.000 [DEBUG] [BLE]        Advertisement received (MAC=F4:12:FA:9C:01:AB, RSSI=-70 dBm)
-2026-03-20 10:20:02.200 [INFO]  [SYSTEM]     Session terminated successfully
+# --- garbage line
+@@@###$$$ INVALID DATA LINE $$$###@@@
+
+# --- valid noise
+2026-03-20 20:00:00.020 [DEBUG] [BLE]        Advertisement received (MAC=02:02:02:02:02:02, RSSI=-92 dBm)
+2026-03-20 20:00:00.030 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:06, RSSI=-70 dBm)
+
+# --- duplicate line
+2026-03-20 20:00:00.030 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:06, RSSI=-70 dBm)
+
+# --- valid detection
+2026-03-20 20:00:00.040 [INFO]  [BLE]        Digital Key device detected (ID=DK-006)
+
+# --- partial write
+2026-03-20 20:00:00.050 [DEBUG] [BLE]        Connection att
+
+# --- valid retry
+2026-03-20 20:00:00.070 [DEBUG] [BLE]        Connection attempt initiated
+2026-03-20 20:00:00.090 [WARN]  [BLE]        Packet collision detected
+
+# --- random junk in between
+lksdjflksdjflksjdflksjdflkjsdf
+
+# --- valid connection
+2026-03-20 20:00:00.120 [INFO]  [BLE]        Connection established
+
+# --- auth start
+2026-03-20 20:00:00.150 [INFO]  [AUTH]       Session initiated (session_id=sess_006)
+
+# --- broken metadata
+2026-03-20 20:00:00.160 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0x1234, invalid_field
+
+# --- valid request
+2026-03-20 20:00:00.170 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0x1234)
+
+# --- out of order response BEFORE request
+2026-03-20 20:00:00.165 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=50ms)
+
+# --- valid response again
+2026-03-20 20:00:00.220 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=50ms)
+
+# --- success
+2026-03-20 20:00:00.230 [INFO]  [AUTH]       Authentication successful (session_id=sess_006)
+
+# --- duplicated success
+2026-03-20 20:00:00.230 [INFO]  [AUTH]       Authentication successful (session_id=sess_006)
+
+# --- UWB start
+2026-03-20 20:00:00.260 [INFO]  [UWB]        Ranging session started
+
+# --- corrupted numeric value
+2026-03-20 20:00:00.280 [DEBUG] [UWB]        Distance measured (distance=NaNm)
+
+# --- valid measurements
+2026-03-20 20:00:00.300 [DEBUG] [UWB]        Distance measured (distance=2.0m)
+2026-03-20 20:00:00.340 [DEBUG] [UWB]        Distance measured (distance=1.6m)
+
+# --- broken line mid-write
+2026-03-20 20:00:00.360 [DEBUG] [UWB]
+
+# --- valid
+2026-03-20 20:00:00.380 [DEBUG] [UWB]        Distance measured (distance=1.4m)
+2026-03-20 20:00:00.400 [INFO]  [UWB]        Proximity validated
+
+# --- invalid level
+2026-03-20 20:00:00.420 [CRAZY] [UWB]        Unexpected level test
+
+# --- access
+2026-03-20 20:00:00.450 [DEBUG] [ACCESS]     Door unlock command issued
+
+# --- duplicated unlock
+2026-03-20 20:00:00.450 [DEBUG] [ACCESS]     Door unlock command issued
+
+# --- malformed timestamp again
+2026-99-99 99:99:99.999 [INFO]  [ACCESS]     Impossible timestamp
+
+# --- valid confirm
+2026-03-20 20:00:00.500 [INFO]  [ACCESS]     Door unlock confirmed
+
+# --- random binary-like junk
+\x00\x01\x02\x03 corrupted stream
+
+# --- late extra events
+2026-03-20 20:00:00.700 [DEBUG] [BLE]        Background scan active
+2026-03-20 20:00:00.800 [DEBUG] [UWB]        Ranging session stopped
+
+# --- duplicated termination
+2026-03-20 20:00:01.000 [INFO]  [SYSTEM]     Session terminated successfully
+2026-03-20 20:00:01.000 [INFO]  [SYSTEM]     Session terminated successfully
+
+# --- trailing garbage
+END_OF_LOG???????
