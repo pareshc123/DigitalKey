@@ -66,3 +66,38 @@ class TraceAnalyzer:
         logger.debug(f"Found {len(events)} events between {start_keyword}' and '{end_keyword}'")
 
         return events
+
+    def summarize_by_module(self) -> Dict[str, Dict[str, Any]]:
+        summary = {}
+
+        for event in self.events:
+            module = event.module
+
+            if module not in summary:
+                summary[module] = {
+                    "event_count": 0,
+                    "error_count": 0,
+                    "warning_count": 0,
+                    "first_timestamp": event.timestamp,
+                    "last_timestamp": event.timestamp,
+                }
+
+            summary[module]["event_count"] += 1
+
+            if event.level == "ERROR":
+                summary[module]["error_count"] += 1
+
+            if event.level == "WARNING":
+                summary[module]["warning_count"] += 1
+
+            summary[module]["first_timestamp"] = min(
+                summary[module]["first_timestamp"],
+                event.timestamp,
+            )
+            summary[module]["last_timestamp"] = max(
+                summary[module]["last_timestamp"],
+                event.timestamp,
+            )
+
+            logger.debug(f"Generated module summary for {len(summary)} modules")
+            return summary
