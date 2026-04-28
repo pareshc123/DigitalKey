@@ -1,20 +1,104 @@
-2026-03-20 14:00:00.001 [INFO]  [BLE]        Scanner started
+2026-03-20 18:59:59.880 [INFO]  [SYSTEM]     Vehicle wake-up triggered (source=handle_touch)
+2026-03-20 18:59:59.885 [DEBUG] [SYSTEM]     Power rails stabilizing
+2026-03-20 18:59:59.890 [DEBUG] [SYSTEM]     Initializing subsystems (BLE,UWB,AUTH)
+2026-03-20 18:59:59.895 [DEBUG] [SYSTEM]     Memory check OK
+2026-03-20 18:59:59.900 [DEBUG] [SYSTEM]     Scheduler started
 
-2026-03-20 14:00:00.050 [DEBUG] [BLE]        Advertisement received (MAC=XX:01, RSSI=-90 dBm)
-2026-03-20 14:00:00.060 [DEBUG] [BLE]        Advertisement received (MAC=XX:02, RSSI=-85 dBm)
-2026-03-20 14:00:00.070 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:05, RSSI=-65 dBm)
+2026-03-20 19:00:00.001 [INFO]  [BLE]        Scanner started (interface=hci0)
 
-2026-03-20 14:00:00.080 [INFO]  [BLE]        Digital Key device detected (ID=DK-005)
+# --- BLE FLOOD (PHASE 1)
+2026-03-20 19:00:00.010 [DEBUG] [BLE]        Advertisement received (MAC=01:01:01:01:01:01, RSSI=-96 dBm)
+2026-03-20 19:00:00.012 [DEBUG] [BLE]        Advertisement received (MAC=02:02:02:02:02:02, RSSI=-94 dBm)
+2026-03-20 19:00:00.014 [DEBUG] [BLE]        Advertisement received (MAC=03:03:03:03:03:03, RSSI=-91 dBm)
+2026-03-20 19:00:00.016 [DEBUG] [BLE]        Advertisement received (MAC=04:04:04:04:04:04, RSSI=-89 dBm)
+2026-03-20 19:00:00.018 [DEBUG] [BLE]        Advertisement received (MAC=05:05:05:05:05:05, RSSI=-87 dBm)
+2026-03-20 19:00:00.020 [DEBUG] [BLE]        Advertisement received (MAC=06:06:06:06:06:06, RSSI=-85 dBm)
+2026-03-20 19:00:00.022 [DEBUG] [BLE]        Advertisement received (MAC=07:07:07:07:07:07, RSSI=-92 dBm)
+2026-03-20 19:00:00.024 [DEBUG] [BLE]        Advertisement received (MAC=08:08:08:08:08:08, RSSI=-90 dBm)
+2026-03-20 19:00:00.026 [DEBUG] [BLE]        Advertisement received (MAC=09:09:09:09:09:09, RSSI=-88 dBm)
+2026-03-20 19:00:00.028 [DEBUG] [BLE]        Advertisement received (MAC=10:10:10:10:10:10, RSSI=-93 dBm)
 
-2026-03-20 14:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_005)
-2026-03-20 14:00:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent
-2026-03-20 14:00:00.310 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=100ms)
-2026-03-20 14:00:00.320 [INFO]  [AUTH]       Authentication successful
+# --- TARGET
+2026-03-20 19:00:00.030 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:05, RSSI=-69 dBm)
+2026-03-20 19:00:00.032 [DEBUG] [BLE]        Candidate filtering (threshold > -75 dBm)
+2026-03-20 19:00:00.035 [DEBUG] [BLE]        Device shortlist updated
+2026-03-20 19:00:00.040 [INFO]  [BLE]        Digital Key device detected (ID=DK-005, MAC=AA:BB:CC:DD:05)
 
-2026-03-20 14:00:00.400 [INFO]  [UWB]        Ranging session started
-2026-03-20 14:00:00.500 [DEBUG] [UWB]        Distance measured (distance=2.0m)
-2026-03-20 14:00:00.550 [DEBUG] [UWB]        Distance measured (distance=1.8m)
-2026-03-20 14:00:00.600 [DEBUG] [UWB]        Distance measured (distance=1.4m)
-2026-03-20 14:00:00.650 [INFO]  [UWB]        Proximity validated
+# --- BLE FLOOD CONTINUES (PHASE 2)
+2026-03-20 19:00:00.042 [DEBUG] [BLE]        Advertisement received (MAC=11:11:11:11:11:11, RSSI=-86 dBm)
+2026-03-20 19:00:00.044 [DEBUG] [BLE]        Advertisement received (MAC=12:12:12:12:12:12, RSSI=-84 dBm)
+2026-03-20 19:00:00.046 [DEBUG] [BLE]        Advertisement received (MAC=13:13:13:13:13:13, RSSI=-92 dBm)
+2026-03-20 19:00:00.048 [DEBUG] [BLE]        Advertisement received (MAC=14:14:14:14:14:14, RSSI=-90 dBm)
+2026-03-20 19:00:00.050 [DEBUG] [BLE]        Advertisement received (MAC=15:15:15:15:15:15, RSSI=-88 dBm)
 
-2026-03-20 14:00:00.800 [INFO]  [ACCESS]     Door unlock confirmed
+# --- CONNECTION CHAOS
+2026-03-20 19:00:00.055 [DEBUG] [BLE]        Connection attempt initiated
+2026-03-20 19:00:00.070 [WARN]  [BLE]        Packet collision detected
+2026-03-20 19:00:00.085 [WARN]  [BLE]        Connection timeout (retry=1)
+2026-03-20 19:00:00.100 [DEBUG] [BLE]        Retry connection (attempt=2)
+2026-03-20 19:00:00.120 [WARN]  [BLE]        RSSI fluctuation detected
+2026-03-20 19:00:00.140 [WARN]  [BLE]        Interference spike detected
+2026-03-20 19:00:00.150 [INFO]  [BLE]        Connection established (latency=40ms)
+
+# --- AUTH START
+2026-03-20 19:00:00.160 [INFO]  [AUTH]       Session initiated (session_id=sess_005)
+2026-03-20 19:00:00.170 [DEBUG] [AUTH]       Authentication started
+
+# --- INTERLEAVED NOISE
+2026-03-20 19:00:00.175 [DEBUG] [BLE]        Advertisement received (MAC=16:16:16:16:16:16, RSSI=-91 dBm)
+2026-03-20 19:00:00.178 [DEBUG] [SYSTEM]     CPU load spike (62%)
+
+2026-03-20 19:00:00.180 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xABCD01)
+
+2026-03-20 19:00:00.200 [WARN]  [AUTH]       Minor delay detected
+2026-03-20 19:00:00.210 [DEBUG] [BLE]        Advertisement received (MAC=17:17:17:17:17:17, RSSI=-87 dBm)
+2026-03-20 19:00:00.220 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=60ms)
+2026-03-20 19:00:00.230 [DEBUG] [AUTH]       AUTH_RESPONSE valid
+2026-03-20 19:00:00.240 [INFO]  [AUTH]       Authentication successful (session_id=sess_005)
+
+# --- MORE NOISE BEFORE UWB
+2026-03-20 19:00:00.250 [DEBUG] [BLE]        Advertisement received (MAC=18:18:18:18:18:18, RSSI=-90 dBm)
+2026-03-20 19:00:00.260 [DEBUG] [BLE]        Advertisement received (MAC=19:19:19:19:19:19, RSSI=-88 dBm)
+2026-03-20 19:00:00.270 [DEBUG] [SYSTEM]     Scheduler jitter detected
+
+# --- UWB START
+2026-03-20 19:00:00.280 [INFO]  [UWB]        Ranging session started (anchor_id=UWB-5)
+
+# --- HEAVY UWB CHAOS (~40 lines)
+2026-03-20 19:00:00.300 [DEBUG] [UWB]        Distance measured (distance=2.6m)
+2026-03-20 19:00:00.320 [DEBUG] [UWB]        Distance measured (distance=2.3m)
+2026-03-20 19:00:00.340 [WARN]  [UWB]        Reflection interference
+2026-03-20 19:00:00.360 [DEBUG] [UWB]        Distance measured (distance=2.1m)
+2026-03-20 19:00:00.380 [DEBUG] [UWB]        Distance measured (distance=1.9m)
+2026-03-20 19:00:00.400 [WARN]  [UWB]        Variance spike
+2026-03-20 19:00:00.420 [DEBUG] [UWB]        Distance measured (distance=1.7m)
+2026-03-20 19:00:00.440 [DEBUG] [UWB]        Distance measured (distance=1.6m)
+2026-03-20 19:00:00.460 [DEBUG] [UWB]        Distance measured (distance=1.5m)
+2026-03-20 19:00:00.480 [DEBUG] [UWB]        Distance measured (distance=1.4m)
+2026-03-20 19:00:00.500 [DEBUG] [UWB]        Distance measured (distance=1.3m)
+2026-03-20 19:00:00.520 [DEBUG] [UWB]        Distance measured (distance=1.4m)
+2026-03-20 19:00:00.540 [DEBUG] [UWB]        Distance measured (distance=1.35m)
+2026-03-20 19:00:00.560 [DEBUG] [UWB]        Applying smoothing filter (window=5)
+2026-03-20 19:00:00.580 [INFO]  [UWB]        Proximity validated (threshold < 1.5m, avg=1.38m)
+
+# --- ACCESS CHAOS (~40 lines)
+2026-03-20 19:00:00.600 [INFO]  [ACCESS]     Preparing unlock sequence
+2026-03-20 19:00:00.620 [DEBUG] [ACCESS]     Door unlock command issued
+2026-03-20 19:00:00.640 [WARN]  [CAN]        Bus load high (85%)
+2026-03-20 19:00:00.660 [WARN]  [CAN]        Frame delay detected
+2026-03-20 19:00:00.680 [DEBUG] [ACCESS]     Retry unlock command
+2026-03-20 19:00:00.700 [INFO]  [ACCESS]     Door unlock command issued
+2026-03-20 19:00:00.720 [DEBUG] [ACCESS]     Awaiting confirmation
+2026-03-20 19:00:00.780 [INFO]  [ACCESS]     Door unlock confirmed (latency=100ms)
+
+# --- POST-SUCCESS NOISE (~30 lines)
+2026-03-20 19:00:00.800 [DEBUG] [BLE]        Advertisement received (MAC=20:20:20:20:20:20, RSSI=-91 dBm)
+2026-03-20 19:00:00.820 [DEBUG] [BLE]        Advertisement received (MAC=21:21:21:21:21:21, RSSI=-89 dBm)
+2026-03-20 19:00:00.840 [DEBUG] [SYSTEM]     Background task running
+2026-03-20 19:00:00.860 [DEBUG] [BLE]        Advertisement received (MAC=22:22:22:22:22:22, RSSI=-87 dBm)
+2026-03-20 19:00:00.880 [DEBUG] [BLE]        Advertisement received (MAC=23:23:23:23:23:23, RSSI=-90 dBm)
+2026-03-20 19:00:00.900 [DEBUG] [BLE]        Background scan active
+2026-03-20 19:00:01.000 [DEBUG] [UWB]        Ranging session stopped
+
+# --- TERMINATION
+2026-03-20 19:00:02.000 [INFO]  [SYSTEM]     Session terminated successfully (session_id=sess_005)
