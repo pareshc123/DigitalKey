@@ -7,13 +7,12 @@ from digitalkey.reporting.logger import get_logger
 logger = get_logger(__name__)
 
 
-class Analyzer:
+class TraceAnalyzer:
 
     def __init__(self, events: List[Event]) -> None:
         self.events = events
         logger.debug(f"TraceAnalyzer initialized with {len(events)} events")
 
-    # Filters
     def filter_by_error(self) -> List[Event]:
         errors = [err for err in self.events if err.level == "ERROR"]
         logger.debug(f"Found {len(errors)} ERROR events")
@@ -34,4 +33,36 @@ class Analyzer:
         keyword_lower = keyword.lower()
         events = [event for event in self.events if keyword_lower in event.message.lower()]
         logger.debug(f"Found {len(events)} events matching keyword: {keyword}")
+        return events
+
+    def get_events_between(self, start_keyword: str, end_keyword: str) -> List[Event]:
+
+        start_index = None
+        end_index = None
+
+        start_lower = start_keyword.lower()
+        end_lower = end_keyword.lower()
+
+        for index, event in enumerate(self.events):
+            message = event.message.lower()
+
+            if start_index is None and start_lower in message:
+                start_index = index
+
+            if start_index is not None and end_lower in message:
+                end_index = index
+                break
+
+        if start_index is None:
+            logger.debug(f"Start keyword not found: {start_keyword}")
+            return []
+
+        if end_index is None:
+            logger.debug(f"End keyword not found after start: {end_keyword}")
+            return []
+
+        events = self.events[start_index:end_index + 1]
+
+        logger.debug(f"Found {len(events)} events between {start_keyword}' and '{end_keyword}'")
+
         return events
