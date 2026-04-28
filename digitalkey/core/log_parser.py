@@ -88,7 +88,7 @@ class LogParser:
 
         match = self.LOG_PATTERN.search(line)
 
-        if not line.strip():
+        if not line.strip() or line.strip().startswith("#"):
             return None
 
         if not match:
