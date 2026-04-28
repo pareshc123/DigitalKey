@@ -1,14 +1,86 @@
-2026-03-20 11:00:00.001 [INFO]  [BLE]        Scanner started
-2026-03-20 11:00:00.120 [INFO]  [BLE]        Digital Key device detected (ID=DK-002)
+2026-03-20 11:59:59.900 [INFO]  [SYSTEM]     Vehicle wake-up triggered (source=handle_touch)
+2026-03-20 11:59:59.910 [DEBUG] [SYSTEM]     Initializing subsystems (BLE,UWB,AUTH)
 
-2026-03-20 11:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_002)
-2026-03-20 11:00:00.210 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xAAAA)
+2026-03-20 12:00:00.001 [INFO]  [BLE]        Scanner started (interface=hci0, mode=passive)
 
-2026-03-20 11:00:00.800 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=590ms)
-2026-03-20 11:00:00.810 [INFO]  [AUTH]       Authentication successful (session_id=sess_002)
+# --- noisy BLE environment
+2026-03-20 12:00:00.020 [DEBUG] [BLE]        Advertisement received (MAC=10:20:30:40:50:60, RSSI=-95 dBm)
+2026-03-20 12:00:00.030 [DEBUG] [BLE]        Advertisement received (MAC=11:22:33:44:55:66, RSSI=-88 dBm)
+2026-03-20 12:00:00.040 [DEBUG] [BLE]        Advertisement received (MAC=AA:BB:CC:DD:02, RSSI=-72 dBm)
+2026-03-20 12:00:00.045 [DEBUG] [BLE]        Advertisement received (MAC=77:88:99:AA:BB:CC, RSSI=-85 dBm)
+2026-03-20 12:00:00.050 [DEBUG] [BLE]        Filtering candidates (threshold > -75 dBm)
 
-2026-03-20 11:00:01.000 [INFO]  [UWB]        Ranging session started
-2026-03-20 11:00:01.200 [DEBUG] [UWB]        Distance measured (distance=1.2m)
-2026-03-20 11:00:01.250 [INFO]  [UWB]        Proximity validated
+2026-03-20 12:00:00.060 [INFO]  [BLE]        Digital Key device detected (ID=DK-002, MAC=AA:BB:CC:DD:02)
 
-2026-03-20 11:00:01.400 [INFO]  [ACCESS]     Door unlock confirmed
+# --- unstable connection attempts
+2026-03-20 12:00:00.070 [DEBUG] [BLE]        Connection attempt initiated
+2026-03-20 12:00:00.095 [WARN]  [BLE]        Connection timeout (retry=1)
+2026-03-20 12:00:00.120 [DEBUG] [BLE]        Re-attempting connection (retry=2)
+2026-03-20 12:00:00.160 [WARN]  [BLE]        Packet collision detected
+2026-03-20 12:00:00.200 [INFO]  [BLE]        Connection established (latency=40ms)
+
+# ---- detection_to_auth ≈ 140ms (PASS)
+
+2026-03-20 12:00:00.200 [INFO]  [AUTH]       Session initiated (session_id=sess_002)
+2026-03-20 12:00:00.210 [DEBUG] [AUTH]       Authentication started (method=challenge_response)
+
+# --- auth request
+2026-03-20 12:00:00.220 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xF1E2D3, attempt=1)
+
+# --- artificial delay chaos (this is the failure trigger)
+2026-03-20 12:00:00.260 [DEBUG] [AUTH]       Waiting for response (timeout=300ms)
+2026-03-20 12:00:00.320 [WARN]  [AUTH]       Response delay detected (>100ms)
+2026-03-20 12:00:00.380 [DEBUG] [AUTH]       Retry timer armed (retry_window=150ms)
+2026-03-20 12:00:00.450 [WARN]  [AUTH]       Network congestion detected
+2026-03-20 12:00:00.520 [DEBUG] [AUTH]       Polling for response
+2026-03-20 12:00:00.600 [WARN]  [AUTH]       Response still pending
+2026-03-20 12:00:00.650 [DEBUG] [AUTH]       Buffer flush (partial packets discarded)
+
+# ---- AUTH_RESPONSE arrives TOO LATE (~450ms after request)
+2026-03-20 12:00:00.670 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=450ms)
+2026-03-20 12:00:00.680 [DEBUG] [AUTH]       AUTH_RESPONSE valid (signature=OK)
+2026-03-20 12:00:00.690 [INFO]  [AUTH]       Authentication successful (session_id=sess_002)
+
+# ---- auth_response ≈ 450ms (FAIL > 300ms)
+
+2026-03-20 12:00:00.720 [DEBUG] [SESSION]    State updated (AUTHENTICATED)
+
+# --- UWB starts normally (should PASS)
+2026-03-20 12:00:00.750 [INFO]  [UWB]        Initializing UWB subsystem
+2026-03-20 12:00:00.780 [INFO]  [UWB]        Ranging session started (anchor_id=UWB-2)
+
+2026-03-20 12:00:00.820 [DEBUG] [UWB]        Distance measured (distance=2.2m, quality=low)
+2026-03-20 12:00:00.860 [DEBUG] [UWB]        Distance measured (distance=1.9m, quality=medium)
+2026-03-20 12:00:00.900 [WARN]  [UWB]        Measurement jitter detected (variance=0.4m)
+2026-03-20 12:00:00.940 [DEBUG] [UWB]        Distance measured (distance=1.6m, quality=high)
+2026-03-20 12:00:00.980 [DEBUG] [UWB]        Distance measured (distance=1.4m, quality=high)
+2026-03-20 12:00:01.020 [DEBUG] [UWB]        Distance measured (distance=1.3m, quality=high)
+2026-03-20 12:00:01.060 [DEBUG] [UWB]        Applying smoothing filter (window=3)
+2026-03-20 12:00:01.100 [INFO]  [UWB]        Proximity validated (threshold < 1.5m, avg=1.38m)
+
+# --- PASS UWB
+
+2026-03-20 12:00:01.130 [DEBUG] [SESSION]    State updated (PROXIMITY_CONFIRMED)
+
+# --- Access phase (normal, should PASS)
+2026-03-20 12:00:01.160 [INFO]  [ACCESS]     Preparing unlock sequence
+2026-03-20 12:00:01.200 [DEBUG] [ACCESS]     Door unlock command issued (door=driver)
+2026-03-20 12:00:01.230 [WARN]  [CAN]        Bus load high (utilization=83%)
+2026-03-20 12:00:01.260 [DEBUG] [ACCESS]     Retry unlock command (attempt=2)
+2026-03-20 12:00:01.300 [INFO]  [ACCESS]     Door unlock command issued
+
+2026-03-20 12:00:01.350 [DEBUG] [ACCESS]     Awaiting confirmation
+2026-03-20 12:00:01.400 [INFO]  [ACCESS]     Door unlock confirmed (latency=100ms)
+
+# --- PASS unlock timing
+
+2026-03-20 12:00:01.450 [DEBUG] [SESSION]    State updated (ACCESS_GRANTED)
+
+# --- background chatter
+2026-03-20 12:00:01.600 [DEBUG] [BLE]        Background scan active
+2026-03-20 12:00:01.700 [DEBUG] [UWB]        Ranging session stopped
+
+# --- session termination (PASS)
+2026-03-20 12:00:02.200 [INFO]  [SYSTEM]     Session terminated successfully (session_id=sess_002)
+
+# ---- total session ≈ 2.3s (PASS < 5000ms)
