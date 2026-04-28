@@ -4,18 +4,20 @@
 
 DigitalKey/
 
-    ├── config/                  # Configurable parameters
-    │   ├── thresholds.yaml      # timing limits, distance thresholds
-    │   └── test_config.yaml     # test execution settings
-    │
-    ├── Traces/                    # Raw Traces (input)
-    │   ├── happy_path.log
-    │   ├── delayed_auth.log
-    │   ├── uwb_failure.log
+    ├── config/                      # Configurable parameters
+    │   ├── thresholds.yaml          # timing limits, distance thresholds
+    │   └── test_config.yaml         # test execution settings
+    │    
+    ├── Traces/                      # Raw Traces (input)
     │   ├── auth_failure.log
-    │   └── noisy_environment.log
+    │   ├── corrupted.log
+    │   ├── delayed_auth.log
+    │   ├── nightmare.log
+    │   ├── noisy_environment.log
+    │   ├── success.log
+    │   └── uwb_failure.log
     │
-    ├── test_data/               # Data-driven test definitions
+    ├── test_data/                   # Data-driven test definitions
     │   └── test_scenarios.json
     │
     ├── digitalkey/
@@ -31,13 +33,12 @@ DigitalKey/
     │   │   └── state_machine.py     # (state validator)
     │   │
     │   ├── analysis/
-    │   │   ├── trace_analyzer.py    # todo: filtering, debugging
+    │   │   ├── trace_analyzer.py    # filtering, debugging
     │   │   └── metrics.py           # todo: latency, stats
     │   │
     │   ├── reporting/
     │   │   ├── report_generator.py  # reporting
-    │   │   ├── logger.py            # execution logger
-    │   │   └── export.py            # CSV/JSON output
+    │   │   └── logger.py            # execution logger
     │
     ├── tests/
     │   ├── unit/
