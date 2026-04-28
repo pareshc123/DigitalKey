@@ -27,13 +27,15 @@ class StateMachine:
             if next_state is None:
                 continue
 
-            logger.debug(f"Event mapped to state: {event.message} -> {next_state.name}")
+            logger.debug(
+                f"[MAPPING] {event.module} | "
+                f"{event.message} -> STATE={next_state.name}"
+            )
 
             if next_state == self.current_state:
                 logger.debug(
                     f"[STATE HOLD] {self.current_state.name} | "
-                    f"{event.timestamp} | "
-                    f"{event.module} | {event.message}"
+                    f"{event.timestamp} | {event.module} | {event.message}"
                 )
                 continue
 
@@ -42,10 +44,16 @@ class StateMachine:
                     f"Invalid transition: "
                     f"{self.current_state.name} -> {next_state.name}"
                 )
-                logger.warning(reason)
+                logger.warning(
+                    f"[INVALID TRANSITION] {self.current_state.name} -> {next_state.name} | "
+                    f"{event.module} | {event.message}"
+                )
                 return self._fail(reason, event.message)
 
-            logger.debug(f"Valid transition: {self.current_state.name} -> {next_state.name}")
+            logger.debug(
+                f"[TRANSITION] {self.current_state.name} -> {next_state.name} | "
+                f"{event.module} | {event.message}"
+            )
 
             # Valid transition
             self.current_state = next_state
