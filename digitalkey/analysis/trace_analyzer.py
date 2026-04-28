@@ -20,11 +20,18 @@ class Analyzer:
         return errors
 
     def filter_by_module(self, module_name: str) -> List[Event]:
-        events = [mod for mod in self.events if mod.module == module_name]
-        logger.debug(f"Found {len(events)} events for module: {module_name}")
-        return events
+        module_name = module_name.upper()
+        mod_events = [event for event in self.events if event.module.upper() == module_name]
+        logger.debug(f"Found {len(mod_events)} events for module: {module_name}")
+        return mod_events
 
     def filter_by_time(self, start: datetime, end: datetime) -> List[Event]:
-        events = [t for t in self.events if start <= t.timestamp <= end]
-        logger.debug(f"Found {len(events)} events between {start} and {end}")
+        time_events = [event for event in self.events if start <= event.timestamp <= end]
+        logger.debug(f"Found {len(time_events)} events between {start} and {end}")
+        return time_events
+
+    def find_by_keyword(self, keyword: str) -> List[Event]:
+        keyword_lower = keyword.lower()
+        events = [event for event in self.events if keyword_lower in event.message.lower()]
+        logger.debug(f"Found {len(events)} events matching keyword: {keyword}")
         return events
