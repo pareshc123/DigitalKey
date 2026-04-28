@@ -29,6 +29,14 @@ class StateMachine:
 
             logger.debug(f"Event mapped to state: {event.message} -> {next_state.name}")
 
+            if next_state == self.current_state:
+                logger.debug(
+                    f"[STATE HOLD] {self.current_state.name} | "
+                    f"{event.timestamp} | "
+                    f"{event.module} | {event.message}"
+                )
+                continue
+
             if not self.is_valid_transition(self.current_state, next_state):
                 reason = (
                     f"Invalid transition: "
