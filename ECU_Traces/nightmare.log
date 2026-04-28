@@ -1,0 +1,92 @@
+2026-03-20 21:00:00.000 [INFO]  [SYSTEM]     Vehicle wake-up triggered (source=handle_touch)
+2026-03-20 21:00:00.005 [DEBUG] [SYSTEM]     Initializing subsystems (BLE,UWB,AUTH)
+
+# --- BLE starts normally
+2026-03-20 21:00:00.010 [INFO]  [BLE]        Scanner started (interface=hci0)
+
+# --- OUT OF ORDER (future timestamp appears early)
+2026-03-20 21:00:01.500 [DEBUG] [ACCESS]     Door unlock confirmed
+
+# --- BLE flood
+2026-03-20 21:00:00.020 [DEBUG] [BLE]        Advertisement received (MAC=AA:01, RSSI=-90 dBm)
+2026-03-20 21:00:00.021 [DEBUG] [BLE]        Advertisement received (MAC=AA:02, RSSI=-88 dBm)
+2026-03-20 21:00:00.022 [DEBUG] [BLE]        Advertisement received (MAC=AA:03, RSSI=-85 dBm)
+
+# --- duplicate detection
+2026-03-20 21:00:00.030 [INFO]  [BLE]        Digital Key device detected (ID=DK-007)
+2026-03-20 21:00:00.030 [INFO]  [BLE]        Digital Key device detected (ID=DK-007)
+
+# --- partial + broken line
+2026-03-20 21:00:00.035 [DEBUG] [BLE]        Connect
+ion attempt initiated
+
+# --- connection race
+2026-03-20 21:00:00.040 [DEBUG] [BLE]        Connection attempt initiated
+2026-03-20 21:00:00.042 [INFO]  [BLE]        Connection established
+2026-03-20 21:00:00.041 [WARN]  [BLE]        Connection timeout (retry=1)
+
+# --- AUTH + ACCESS race (impossible ordering)
+2026-03-20 21:00:00.050 [DEBUG] [ACCESS]     Door unlock command issued
+2026-03-20 21:00:00.051 [INFO]  [AUTH]       Session initiated (session_id=sess_007)
+
+# --- AUTH chaos
+2026-03-20 21:00:00.060 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=40ms)
+2026-03-20 21:00:00.061 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=0xAAA111)
+
+# --- duplicated + conflicting
+2026-03-20 21:00:00.070 [DEBUG] [AUTH]       AUTH_RESPONSE received (latency=40ms)
+2026-03-20 21:00:00.070 [ERROR] [AUTH]       AUTH_RESPONSE invalid (signature mismatch)
+
+# --- split metadata
+2026-03-20 21:00:00.080 [DEBUG] [AUTH]       AUTH_REQUEST sent (challenge=
+0xBBB222)
+
+# --- valid success appears after invalid
+2026-03-20 21:00:00.090 [INFO]  [AUTH]       Authentication successful (session_id=sess_007)
+
+# --- UWB starts BEFORE auth success (race)
+2026-03-20 21:00:00.085 [INFO]  [UWB]        Ranging session started
+
+# --- UWB chaos
+2026-03-20 21:00:00.100 [DEBUG] [UWB]        Distance measured (distance=2.5m)
+2026-03-20 21:00:00.110 [DEBUG] [UWB]        Distance measured (distance=1.4m)
+2026-03-20 21:00:00.105 [DEBUG] [UWB]        Distance measured (distance=3.0m)
+
+# --- duplicate proximity
+2026-03-20 21:00:00.120 [INFO]  [UWB]        Proximity validated
+2026-03-20 21:00:00.120 [INFO]  [UWB]        Proximity validated
+
+# --- ACCESS race
+2026-03-20 21:00:00.130 [DEBUG] [ACCESS]     Door unlock command issued
+2026-03-20 21:00:00.125 [DEBUG] [ACCESS]     Door unlock command issued
+
+# --- duplicate confirm
+2026-03-20 21:00:00.140 [INFO]  [ACCESS]     Door unlock confirmed
+2026-03-20 21:00:00.140 [INFO]  [ACCESS]     Door unlock confirmed
+
+# --- OUT OF ORDER older timestamp appears
+2026-03-20 20:59:59.999 [DEBUG] [SYSTEM]     Old buffered log flushed
+
+# --- corrupted numeric
+2026-03-20 21:00:00.150 [DEBUG] [UWB]        Distance measured (distance=???)
+
+# --- garbage
+@@@ corrupted stream @@@
+
+# --- interleaved BLE spam during ACCESS
+2026-03-20 21:00:00.160 [DEBUG] [BLE]        Advertisement received (MAC=FF:01, RSSI=-91 dBm)
+2026-03-20 21:00:00.161 [DEBUG] [BLE]        Advertisement received (MAC=FF:02, RSSI=-89 dBm)
+
+# --- partial termination
+2026-03-20 21:00:00.170 [INFO]  [SYSTEM]     Session term
+
+# --- duplicate + conflicting termination
+2026-03-20 21:00:00.180 [INFO]  [SYSTEM]     Session terminated successfully
+2026-03-20 21:00:00.181 [ERROR] [SYSTEM]     Session terminated (error_state)
+
+# --- more out-of-order late logs
+2026-03-20 21:00:02.000 [DEBUG] [BLE]        Background scan active
+2026-03-20 21:00:01.000 [DEBUG] [UWB]        Ranging session stopped
+
+# --- final garbage tail
+### END ### ???
