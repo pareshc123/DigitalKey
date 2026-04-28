@@ -133,19 +133,3 @@ class LogParser:
         self._events = events
         logger.info(f"Extracted {len(events)} valid events")
         return events
-
-    # Filters
-    def filter_by_error(self) -> List[Event]:
-        errors = [err for err in self.extract_events() if err.level == "ERROR"]
-        logger.debug(f"Found {len(errors)} ERROR events")
-        return errors
-
-    def filter_by_module(self, module_name: str) -> List[Event]:
-        events = [mod for mod in self.extract_events() if mod.module == module_name]
-        logger.debug(f"Found {len(events)} events for module: {module_name}")
-        return events
-
-    def filter_by_time(self, start: datetime, end: datetime) -> List[Event]:
-        events = [t for t in self.extract_events() if start <= t.timestamp <= end]
-        logger.debug(f"Found {len(events)} events between {start} and {end}")
-        return events
